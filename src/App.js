@@ -1,57 +1,29 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import SearchBox from "./components/search-box";
+import CardList from "./components/card-list";
 
-// class App extends Component {
-//   constructor() {
-//     super();
-//     this.state = {
-//       monsters: [],
-//     };
-//     console.log("1");
-//   }
-//   componentDidMount() {
-//     fetch("https://jsonplaceholder.typicode.com/users")
-//       .then((response) => response.json())
-//       .then((users) =>
-//         this.setState(
-//           () => {
-//             return { monsters: users };
-//           },
-//           () => {
-//             console.log(this.state.monsters[0]);
-//           }
-//         )
-//       );
-//     console.log("3");
-//   }
-
-//   render() {
-//     console.log("render");
-
-//     return (
-//       <div className="App">
-//         {this.state.monsters.map((monster, i) => {
-//           return <h1 key={i}>{monster.name}</h1>;
-//         })}
-//         <button>Change Name</button>
-//       </div>
-//     );
-//   }
-// }
 const App = () => {
-  const [monsters, setMonster] = useState("");
+  const [monsters, setMonster] = useState([]);
+  const [searchField, setSearchField] = useState("");
+  const [filteredMonsters, setFilteredMonsters] = useState(monsters);
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/users")
       .then((res) => res.json())
       .then((users) => setMonster(users));
   }, []);
-  // console.log(monsters);
 
+  useEffect(() => {
+    const newFilteredMonsters = monsters.filter((monster) => {
+      return monster.name.toLocaleLowerCase().includes(searchField);
+    });
+    setFilteredMonsters(newFilteredMonsters);
+  }, [monsters, searchField]);
   const onSearchChange = (e) => {
     const searchFieldStr = e.target.value.toLocaleLowerCase();
-    console.log(searchFieldStr);
+    setSearchField(searchFieldStr);
   };
+  console.log(filteredMonsters);
   return (
     <div className="App">
       <h1 className="app-title">Monster Rolodex</h1>
@@ -60,6 +32,7 @@ const App = () => {
         onChangeHandler={onSearchChange}
         placeholder="search monsters"
       />
+      <CardList monsters={filteredMonsters} />
     </div>
   );
 };
