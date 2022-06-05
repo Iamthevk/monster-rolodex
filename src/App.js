@@ -23,7 +23,6 @@ const App = () => {
     const searchFieldStr = e.target.value.toLocaleLowerCase();
     setSearchField(searchFieldStr);
   };
-  console.log(filteredMonsters);
   return (
     <div className="App">
       <h1 className="app-title">Monster Rolodex</h1>
